@@ -83,4 +83,21 @@ def createTree(dataSet, labels):
 		myTree[bestFeatLabel][value] = createTree(splitDataSet(dataSet, bestFeat, value), subLabels)
 	return myTree
 
-print(createTree(dataSet, labels))
+
+def classify(inputTree, featLabels, testVec):
+	firststr = inputTree.keys()[0]
+	secondDict = inputTree[firststr]
+	featIndex = featLabels.index(firststr)
+	for key in secondDict.keys():
+		if testVec[featIndex] == key:
+			if type(secondDict[key]).__name__ == 'dict':
+				classLabel = classify(secondDict[key], featLabels, testVec)
+			else:
+				classLabel = secondDict[key]
+	return classLabel
+
+
+myTree = createTree(dataSet, labels)
+labels = ['no surfacing', 'flippers']
+
+print(classify(myTree, labels, [1,0]))
